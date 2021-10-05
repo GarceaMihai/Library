@@ -1,0 +1,60 @@
+<div class="container">
+  <div class="row justify-content-md-center">
+    <div class="col-md-auto">
+      <br>
+      <h1>Request a book</h1>
+      <br><a href="https://isbnsearch.org" target="_blank" rel="noopener">Find your book's ISBN-13 here</a><br>
+      <br><br><br>
+    </div>
+  </div>
+
+  <div class="row justify-content-md-center">
+    <div class="col">
+    <form [formGroup]="requestForm" (submit)="requestBook()">
+      <div class="col">
+        <label for="title" class="control-label">Title</label> <input
+        id="title" class="form-control" [formControlName]="'title'"/>
+      </div>
+      <div class="col">
+        <label for="isbn13" class="control-label">ISBN-13</label> <input
+        id="isbn13" class="form-control" maxlength="13"
+        pattern="\d{13}" [formControlName]="'isbn13'"/>
+        <span style="color: red;" *ngIf="!requestForm.get('isbn13').valid && requestForm.get('isbn13').touched">
+                                    Please provide a valid ISBN-13 number
+        </span><br>
+      </div><br>
+      <div class="col">
+        <div class="form-group">
+          <button name="request" type="submit" class="btn btn-success">Submit</button>
+        </div>
+      </div>
+    </form>
+    </div>
+    <div class="col">
+      <h2>My requests</h2><br>
+      <table class="table">
+        <thead>
+        <tr>
+          <th>Title</th>
+          <th>ISBN-13</th>
+          <th>Satisfied</th>
+          <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let request of principalRequests">
+          <td>{{request.bookTitle}}</td>
+          <td>{{request.isbn13}}</td>
+          <td>{{request.satisfied}}</td>
+          <td>
+            <button name="delete-request" type="button" class="btn btn-success" (click)="deleteRequest(request.id)">
+              <i class="fa fa-trash"></i> Delete
+            </button>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,23 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-6 col-md-offset-3">
+      <h1>Login</h1>
+
+      <form [formGroup]="loginForm" (submit)="login()">
+
+          <label for="username">Username</label>
+          <input [formControlName]="'username'" id="username" class="form-control" />
+
+          <label for="password">Password</label>
+          <input type="password" [formControlName]="'password'" id="password" class="form-control" />
+
+        <div class="form-group" style="padding-top: 10px;">
+          <button type="submit" class="btn btn-success">Log in</button>
+          <br>
+          <span>No account? <a routerLink="/registration" routerLinkActive="active">Register here</a></span>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>

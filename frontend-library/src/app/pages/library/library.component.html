@@ -1,0 +1,76 @@
+<div class="container">
+  <div class="row justify-content-md-center">
+    <div class="col-md-auto">
+      <br>
+      <h1>HOME PAGE</h1>
+      <br>
+      <button type="button" class="btn btn-success" style="display: inline-block;" (click)="open(content)">
+        <i class="fa fa-filter"></i> Filter results
+      </button>
+      <br>
+      <br><br><br>
+    </div>
+  </div>
+
+  <div class="row">
+    <input class="form-control mr-sm-2" id="searchbar" onkeyup="search_book()" type="text" name="search" placeholder="Search books or authors...">
+  </div>
+  <div class="row justify-content-md-center">
+    <div class="col-md-auto">
+      <br><br>
+      <ol id='list'>
+        <li class="books" *ngFor = "let book of books">
+          <p> <a routerLink="/library/book/{{book.id}}" routerLinkActive="active">{{book.title}}</a>, {{book.author}}</p>
+        </li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Filter books</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <ng-multiselect-dropdown
+      [placeholder]="'Select one or more titles'"
+      [settings]="dropdownSettings"
+      [data]="titlesDropdownList"
+      [(ngModel)]="selectedTitles"
+    >
+    </ng-multiselect-dropdown><br>
+    <ng-multiselect-dropdown
+      [placeholder]="'Select one or more authors'"
+      [settings]="dropdownSettings"
+      [data]="authorsDropdownList"
+      [(ngModel)]="selectedAuthors"
+    >
+    </ng-multiselect-dropdown><br>
+    <ng-multiselect-dropdown
+      [placeholder]="'Select one or more languages'"
+      [settings]="dropdownSettings"
+      [data]="languagesDropdownList"
+      [(ngModel)]="selectedLanguages"
+    >
+    </ng-multiselect-dropdown><br>
+    <label for="year-slider">Publishing year range: {{yearValue}} - {{yearHighValue}}</label>
+    <ngx-slider id="year-slider" [(value)]="yearValue" [(highValue)]="yearHighValue" [options]="yearSliderOptions"></ngx-slider><br><br>
+    <label for="pages-slider">Number of pages range: {{pagesValue}} - {{pagesHighValue}}</label>
+    <ngx-slider id="pages-slider" [(value)]="pagesValue" [(highValue)]="pagesHighValue" [options]="pagesSliderOptions"></ngx-slider><br><br>
+    <div class="col">
+      <div class="modal-footer">
+      <button type="button" class="btn btn-outline-dark" (click)="modal.close('Apply click');applyFilter()">
+        Apply
+      </button>
+        <button type="button" class="btn btn-outline-dark" (click)="modal.close('Apply click');resetFilter()">
+          Reset
+        </button>
+      </div>
+    </div>
+  </div>
+</ng-template>
+

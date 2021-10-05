@@ -1,0 +1,151 @@
+<div class="container" style="padding-bottom: 20px;">
+  <div class="row justify-content-md-center">
+    <div class="col-md-auto">
+      <br>
+      <h1>{{book.title}}</h1>
+      <br>
+      <div *ngIf="checkIfBookIsRentedByPrincipal()">
+        <div class="alert alert-info">You have rented this book!</div>
+      </div>
+      <div *ngIf="book.nrOfCopies < book.nrOfActiveRentals && !checkIfBookIsRentedByPrincipal()">
+        <div class="alert alert-danger">No copy available!</div>
+      </div>
+      <br>
+    </div>
+  </div>
+  <div class="row justify-content-md-center">
+    <div class="col-md-auto">
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">Author: {{book.author}}</li>
+        <li class="list-group-item">Language: {{book.language}}</li>
+        <li class="list-group-item">Published: {{book.published}}</li>
+        <li class="list-group-item">Nr. of pages: {{book.nrOfPages}}</li>
+        <li class="list-group-item">Nr. of available copies: {{getNrOfAvailableCopies()}}</li>
+        <li class="list-group-item">ISBN-13: {{book.isbn13}}</li>
+      </ul>
+      <br>
+    </div>
+  </div>
+  <div class="row justify-content-md-center">
+    <div class="col-md-auto" *ngIf="!checkIfBookIsRentedByPrincipal()">
+      <button name="rent" type="button" class="btn btn-success"
+              style="display: inline-block;"
+              [disabled]="book.nrOfCopies < book.nrOfActiveRentals"
+              (click)="open(content)">
+        <i class="fa fa-book"></i> <span *ngIf="book.nrOfCopies != book.nrOfActiveRentals"> Rent</span>
+        <span *ngIf="book.nrOfCopies == book.nrOfActiveRentals"> Reserve</span>
+      </button>
+    </div>
+    <div class="col-md-auto">
+      <button name="add-to-wishlist" type="button" class="btn btn-success"
+              style="display: inline-block;"
+              *ngIf="!checkIfBookIsWished()" (click)="addToWishlist()">
+        <i class="fa fa-plus"></i> Add to wishlist
+      </button>
+      <button name="remove-to-wishlist" type="button" class="btn btn-danger"
+              style="display: inline-block;"
+              *ngIf="checkIfBookIsWished()" (click)="removeBookFromWishlist()">
+        <i class="fa fa-minus"></i> Remove from wishlist
+      </button>
+    </div>
+    <div class="col-md-auto">
+    <a routerLink="/library" routerLinkActive="active">
+      <button name="go-back-to-home-page" type="button" class="btn btn-success" style="display: inline-block;">
+        <i class="fa fa-chevron-left"></i> Back
+      </button>
+    </a>
+    </div>
+  </div>
+  <div class="row justify-content-md-center">
+    <div class="col-sm-9">
+      <br><h2>Recommend this book to a friend</h2><br>
+      <form [formGroup]="recommendationForm" (submit)="recommendBook()">
+        <input class="form-control" placeholder="Send to a friend" [formControlName]="'recommendTo'">
+        <span style="color: red;" *ngIf="!recommendationForm.get('recommendTo').valid && recommendationForm.get('recommendTo').touched">
+                                    Please enter a friend's username
+        </span>
+        <br/>
+        <br/>
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+  </div>
+  <div class="row justify-content-md-center">
+    <div class="col-sm-9">
+    <br><hr><br><h3>Reviews</h3><br>
+
+    <div class="container bootdey">
+      <div class="col-md-12 bootstrap snippets">
+        <div class="panel">
+          <div class="panel-body">
+            <form [formGroup]="reviewForm" (submit)="postReview()">
+              <div class="form-group">
+                <textarea class="form-control" rows="5" placeholder="What are you thinking?" [formControlName]="'body'"></textarea>
+                <span style="color: red;" *ngIf="!reviewForm.get('body').valid && reviewForm.get('body').touched">
+                                    Review cannot be blank
+                </span>
+              </div>
+              <div class="mar-top clearfix">
+                <button name="post-comment" class="btn btn-sm btn-primary pull-right" type="submit"><i class="fa fa-pencil fa-fw"></i> Post</button>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="panel">
+          <div class="panel-body">
+            <!-- Newsfeed Content -->
+            <div class="media-block">
+              <div class="media-body"  *ngFor="let review of reviews">
+                <div class="mar-btm">
+                  <a class="btn-link text-semibold media-heading box-inline">{{review.username}}</a>
+                </div>
+                <br>
+                <p style="word-break: break-all;">{{review.body}}</p>
+                <div style="padding-left:370px;" *ngIf="review.userId == principal.id">
+                    <button style="width: 50px;font-size: 16px;color:blue;" name="delete-comment" id="commentToDelete"
+                            type="button" class="btn btn-default btn-lg btn-block" (click)="deleteReview(review.id)">Delete</button>
+                </div>
+                <hr>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+    <br><br>
+  </div>
+</div>
+
+
+  <ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Rent this book</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="rentalForm" (submit)="rentOrReserve()">
+
+          <div class="col-md-auto">
+          <input [formControlName]="'address'" id="address" class="form-control" placeholder="Address">
+          <span style="color: red;" *ngIf="!rentalForm.get('address').valid && rentalForm.get('address').touched">
+                                    Address cannot be blank
+          </span></div><br>
+          <div class="col-md-auto">
+          <input [formControlName]="'phone'" id="phoneNumber" class="form-control" placeholder="Phone number">
+          <span style="color: red;" *ngIf="!rentalForm.get('phone').valid && rentalForm.get('phone').touched">
+                                    Phone number cannot be blank
+          </span></div><br>
+
+
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-outline-dark" (click)="modal.close('Rent click')" [disabled]="rentalForm.invalid">
+          Rent
+        </button>
+      </div>
+    </form>
+  </div>
+</ng-template>
+

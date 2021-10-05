@@ -1,0 +1,48 @@
+<div [style]="'display:flex'">
+
+  <div class="container">
+    <div class="row">
+      <div class="col-sm">
+        <h2>My rentals</h2><br>
+        <table class="table">
+          <thead>
+          <tr>
+            <th scope="col">Book</th>
+            <th scope="col">Valid since</th>
+            <th scope="col">Valid until</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let rental of rentals">
+            <td><a routerLink="/library/book/{{rental.bookDto.id}}" routerLinkActive="active">{{rental.bookDto.title}}</a>
+              , {{rental.bookDto.author}}</td>
+            <td>{{rental.validSince}}</td>
+            <td>{{rental.validUntil}}</td>
+          </tr>
+          </tbody>
+        </table>
+
+      </div>
+
+      <div class="col-sm">
+        <h2>Wishlist</h2><br>
+        <table class="table">
+          <thead>
+          <tr>
+            <th scope="col">Book</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let book of bookWishlist">
+            <td><a routerLink="/library/book/{{book.id}}" routerLinkActive="active">{{book.title}}</a>
+              , {{book.author}}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+
+
+</div>

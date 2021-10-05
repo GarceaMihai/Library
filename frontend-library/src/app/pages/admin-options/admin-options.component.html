@@ -1,0 +1,564 @@
+<!-- Books -->
+
+<div class="container" *ngIf="option == 0">
+  <div class="row">
+    <div class="col">
+
+        <h1>Add book</h1>
+
+
+      <form [formGroup]="addBookForm" (submit)="addBook()">
+
+        <label *ngIf="editing" for="disabled-book-id" class="control-label">ID</label>
+        <input [formControlName]="'id'"  *ngIf="editing" id="disabled-book-id" class="form-control" /><br>
+
+          <label for="title" class="control-label">Title</label> <input [formControlName]="'title'"
+          id="title" class="form-control" />
+          <span style="color: red;" *ngIf="!addBookForm.get('title').valid && addBookForm.get('title').touched">
+                                    Title cannot be blank
+          </span><br>
+          <label for="author" class="control-label">Author</label> <input [formControlName]="'author'"
+          id="author" class="form-control"/>
+          <span style="color: red;" *ngIf="!addBookForm.get('author').valid && addBookForm.get('author').touched">
+                                    Author cannot be blank
+          </span><br>
+          <label for="language" class="control-label">Language</label> <input [formControlName]="'language'"
+          id="language" class="form-control" />
+          <span style="color: red;" *ngIf="!addBookForm.get('language').valid && addBookForm.get('language').touched">
+                                    Language cannot be blank
+          </span><br>
+          <label for="published" class="control-label">Year published *</label> <input [formControlName]="'published'"
+          type="number" id="published" class="form-control" required/>
+          <span style="color: red;" *ngIf="!addBookForm.get('published').valid && addBookForm.get('published').touched">
+                                    Please provide a valid publication year
+          </span><br>
+          <label for="nrOfPages" class="control-label">Number of pages</label> <input [formControlName]="'nrOfPages'"
+          type="number" id="nrOfPages" class="form-control" />
+          <span style="color: red;" *ngIf="!addBookForm.get('nrOfPages').valid && addBookForm.get('nrOfPages').touched">
+                                    Number of pages field cannot be left blank
+          </span><br>
+          <label for="nrOfCopies" class="control-label">Number of copies</label> <input [formControlName]="'nrOfCopies'"
+          type="number" id="nrOfCopies" class="form-control" />
+          <span style="color: red;" *ngIf="!addBookForm.get('nrOfCopies').valid && addBookForm.get('nrOfCopies').touched">
+                                    Number of copies field cannot be left blank
+          </span><br>
+          <label for="isbn13" class="control-label">ISBN-13</label>
+          <input type="text" id="isbn13" class="form-control" autocomplete="off" maxlength="13"
+                 pattern="\d{13}" title="13 digit number" required="" [formControlName]="'isbn13'">
+          <span style="color: red;" *ngIf="!addBookForm.get('isbn13').valid && addBookForm.get('isbn13').touched">
+                                    Please provide a valid ISBN-13 number
+          </span><br>
+
+        <br>
+        <div class="row">
+          <div *ngIf="!editing">
+
+            <div class="form-group" style="padding-right:20px;padding-left:15px;">
+              <button name="add-book" type="submit" class="btn btn-success">Submit</button>
+            </div>
+          </div>
+
+          <div *ngIf="editing">
+
+            <div class="form-group" style="padding-right:20px;padding-left:15px;">
+              <button name="edit-book" type="submit" class="btn btn-success">Edit</button>
+              <button name="cancel-edit-book" type="button" class="btn btn-danger" (click)="cancelEdit()">
+                Cancel edit</button>
+            </div>
+
+          </div>
+
+        </div>
+      </form>
+      <form [formGroup]="exportForm" (submit)="exportBook()" style="margin: 10px;" *ngIf="editing">
+        <label for="txt-book">TXT</label>
+        <input style="margin: 5px;" id="txt-book" type="radio" value="txt" name="fileType" [formControlName]="'fileType'">
+        <label for="xml-book">XML</label>
+        <input style="margin: 5px;" id="xml-book" type="radio" value="xml" name="fileType" [formControlName]="'fileType'">
+        <button type="submit" class="btn btn-success" [disabled]="!exportForm.valid">Export book </button>
+      </form>
+    </div>
+    <div class="col">
+      <h2>All books</h2>
+
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th style="width:30%;"> Title </th>
+          <th style="width:30%;"> Author </th>
+          <th style="width:30%;"> ISBN-13 </th>
+          <th style="width:10%;">  </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let book of dataSource">
+          <td><span > {{book.title}} </span></td>
+          <td><span > {{book.author}} </span></td>
+          <td><span > {{book.isbn13}} </span><td>
+          <td>
+            <ul style="list-style-type:none">
+              <li style="padding-bottom:10px;">
+                <a >
+                  <button name="view-edit-book" type="button" class="btn btn-success" (click)="viewBook(book.id)">
+                    <i class="fa fa-pencil-square-o"></i> View/Edit
+                  </button>
+                </a>
+              </li>
+              <li>
+                <form >
+                  <button name="delete-book" id="bookId" type="button" class="btn btn-success" (click)="deleteBook(book.id)">
+                    <i class="fa fa-trash"></i> Delete
+                  </button>
+                </form>
+              </li>
+            </ul>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<!-- Users -->
+
+<div class="container" *ngIf="option == 1">
+  <div class="row">
+    <div class="col">
+      <h1>Add user</h1>
+      <form [formGroup]="addUserForm" (submit)="addUser()">
+          <label for="email" class="control-label">Email</label> <input
+          id="email" class="form-control" [formControlName]="'email'"/>
+          <span style="color: red;" *ngIf="!addUserForm.get('email').valid && addUserForm.get('email').touched">
+                                    Please provide a valid email
+          </span><br>
+          <label for="username" class="control-label">Username</label> <input
+          id="username" class="form-control" [formControlName]="'username'"/>
+        <span style="color: red;" *ngIf="!addUserForm.get('username').valid && addUserForm.get('username').touched">
+                                    Username cannot be blank
+          </span><br>
+          <label for="password" class="control-label">Password</label> <input
+          id="password" class="form-control" type="password" [formControlName]="'password'"/>
+        <span style="color: red;" *ngIf="!addUserForm.get('password').valid && addUserForm.get('password').touched">
+                                    Password cannot be blank
+          </span><br>
+        <br>
+        <div class="row">
+          <div class="form-group" style="padding-right:20px;padding-left:15px;">
+            <button name="add-user" type="submit" class="btn btn-success">Submit</button>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div class="col">
+      <h2>All users</h2>
+
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th style="width:30%;"> Username </th>
+          <th style="width:30%;"> Email </th>
+          <th style="width:40%;">  </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let user of dataSource">
+          <td><span > {{user.username}} </span></td>
+          <td><span > {{user.email}} </span></td>
+          <td>
+            <ul style="list-style-type:none">
+              <li style="padding-bottom:10px;">
+                <a >
+                  <button name="view-edit-user" type="submit" class="btn btn-success" (click)="open(content, user.id)">
+                    <i class="fa fa-pencil-square-o"></i> View/Edit
+                  </button>
+                </a>
+              </li>
+              <li>
+                <form >
+                  <button name="delete-user" id="userId-{{user.id}}" type="button" class="btn btn-success"
+                          (click)="deleteUser(user.id)">
+                    <i class="fa fa-trash"></i> Delete
+                  </button>
+                </form>
+              </li>
+            </ul>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">View/Update User</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="updateUserForm" (submit)="updateUser()">
+      <div class="col-md-auto">
+        <label for="view-id" class="control-label">ID</label>
+        <input [formControlName]="'id'" id="view-id" class="form-control">
+      </div>
+      <div class="col-md-auto">
+        <label for="email" class="control-label">Email</label>
+        <input [formControlName]="'email'" id="view-email" class="form-control">
+        <span style="color: red;" *ngIf="!updateUserForm.get('email').valid && updateUserForm.get('email').touched">
+                                    Please provide a valid email address
+          </span></div>
+      <div class="col-md-auto">
+        <label for="username" class="control-label">Username</label>
+        <input [formControlName]="'username'" id="view-username" class="form-control">
+        <span style="color: red;" *ngIf="!updateUserForm.get('username').valid && updateUserForm.get('username').touched">
+                                    Username cannot be blank
+          </span></div><br>
+
+
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-outline-dark" (click)="modal.close('Update click')" [disabled]="updateUserForm.invalid">
+          Update
+        </button>
+      </div>
+    </form>
+    <form [formGroup]="changePasswordForm" (submit)="changePassword()">
+      <div class="col-md-auto">
+        <label for="change-password" class="control-label">Password</label>
+        <input [formControlName]="'password'" id="change-password" class="form-control" type="password">
+        <span style="color: red;" *ngIf="!changePasswordForm.get('password').valid && changePasswordForm.get('password').touched">
+                                    Password cannot be blank
+          </span>
+      </div>
+      <br>
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-outline-dark" (click)="modal.close('Password change click')"
+                                [disabled]="changePasswordForm.invalid">
+          Change password
+        </button>
+      </div>
+    </form>
+    <form [formGroup]="exportForm" (submit)="exportUser()">
+      <label for="txt-user">TXT</label>
+      <input style="margin: 5px;" id="txt-user" type="radio" value="txt" name="fileType" [formControlName]="'fileType'">
+      <label for="xml-user">XML</label>
+      <input style="margin: 5px;" id="xml-user" type="radio" value="xml" name="fileType" [formControlName]="'fileType'">
+      <div class="modal-footer">
+        <button type="submit" class="btn btn-outline-dark" (click)="modal.close('Export click')" [disabled]="!exportForm.valid">Export user </button>
+      </div>
+    </form>
+  </div>
+</ng-template>
+
+<!-- Rentals -->
+
+<div class="container" *ngIf="option == 2">
+  <div class="row">
+    <div class="col">
+      <h1>Add rental</h1>
+
+      <form [formGroup]="addRentalForm" (submit)="addRental()">
+        <label for="user-id" class="control-label">User ID</label> <input
+        id="user-id" class="form-control" type="number" [formControlName]="'userId'"/>
+        <span style="color: red;" *ngIf="!addRentalForm.get('userId').valid && addRentalForm.get('userId').touched">
+                                    User ID cannot be empty
+          </span><br>
+        <label for="book-id" class="control-label">Book ID</label> <input
+        id="book-id" class="form-control" type="number" [formControlName]="'bookId'"/>
+        <span style="color: red;" *ngIf="!addRentalForm.get('bookId').valid && addRentalForm.get('bookId').touched">
+                                    Book ID cannot be empty
+          </span><br>
+        <label for="address" class="control-label">Address</label> <input
+        id="address" class="form-control" [formControlName]="'address'"/>
+        <span style="color: red;" *ngIf="!addRentalForm.get('address').valid && addRentalForm.get('address').touched">
+                                    Address cannot be blank
+          </span><br>
+        <label for="phone" class="control-label">Phone</label> <input
+        id="phone" class="form-control" [formControlName]="'phone'"/>
+        <span style="color: red;" *ngIf="!addRentalForm.get('phone').valid && addRentalForm.get('phone').touched">
+                                    Phone cannot be blank
+          </span><br>
+        <br>
+        <div class="row" *ngIf="!editing">
+          <div class="form-group" style="padding-right:20px;padding-left:15px;">
+            <button name="add-user" type="submit" class="btn btn-success">Submit</button>
+          </div>
+        </div>
+        <div class="row" *ngIf="editing">
+
+          <div class="form-group" style="padding-right:20px;padding-left:15px;">
+            <button name="edit-rental" type="submit" class="btn btn-success">Edit</button>
+            <button name="cancel-edit-rental" type="button" class="btn btn-danger" (click)="cancelEdit()">
+              Cancel edit</button>
+          </div>
+
+        </div>
+      </form>
+      <form [formGroup]="exportForm" (submit)="exportRental()" style="margin: 10px;" *ngIf="editing">
+        <label for="txt-rental">TXT</label>
+        <input style="margin: 5px;" id="txt-rental" type="radio" value="txt" name="fileType" [formControlName]="'fileType'">
+        <label for="xml-rental">XML</label>
+        <input style="margin: 5px;" id="xml-rental" type="radio" value="xml" name="fileType" [formControlName]="'fileType'">
+        <button type="submit" class="btn btn-success" [disabled]="!exportForm.valid">Export rental </button>
+      </form>
+    </div>
+    <div class="col">
+      <h2>All Rentals</h2>
+
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th style="width:20%;"> User ID </th>
+          <th style="width:20%;"> Book ID </th>
+          <th style="width:20%;"> Since </th>
+          <th style="width:20%;"> Until </th>
+          <th style="width:20%;">  </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let rental of dataSource">
+          <td><span > {{rental.userId}} </span></td>
+          <td><span > {{rental.bookId}} </span></td>
+          <td><span > {{rental.validSince}} </span></td>
+          <td><span > {{rental.validUntil}} </span></td>
+          <td>
+            <ul style="list-style-type:none">
+              <li style="padding-bottom:10px;">
+                  <button name="view-edit-user" type="button" class="btn btn-success" (click)="viewRental(rental.id)">
+                    <i class="fa fa-pencil-square-o"></i> View/Edit
+                  </button>
+              </li>
+              <li>
+                <form >
+                  <button name="delete-user" type="button" class="btn btn-success"
+                          (click)="deleteRental(rental.id)">
+                    <i class="fa fa-trash"></i> Delete
+                  </button>
+                </form>
+              </li>
+            </ul>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<!-- Reviews -->
+
+<div class="container" *ngIf="option == 3">
+  <div class="row">
+    <div class="col">
+      <h1>Add review</h1>
+
+      <form [formGroup]="reviewForm" (submit)="addReview()">
+        <label for="review-user-id" class="control-label">User ID</label> <input
+        id="review-user-id" class="form-control" type="number" [formControlName]="'userId'"/>
+        <label for="review-book-id" class="control-label">Book ID</label> <input
+        id="review-book-id" class="form-control" type="number" [formControlName]="'bookId'"/>
+        <label for="body" class="control-label">Body</label>
+        <textarea id="body" class="form-control" rows="5" [formControlName]="'body'"></textarea>
+        <span style="color: red;" *ngIf="!reviewForm.get('body').valid && reviewForm.get('body').touched">
+                                    Body cannot be blank
+        <br>
+        </span>
+        <br>
+        <div class="row" *ngIf="!editing">
+          <div class="form-group" style="padding-right:20px;padding-left:15px;">
+            <button name="add-review" type="submit" class="btn btn-success">Submit</button>
+          </div>
+        </div>
+
+
+          <div class="row" *ngIf="editing">
+
+            <div class="form-group" style="padding-right:20px;padding-left:15px;">
+              <button name="edit-book" type="submit" class="btn btn-success">Edit</button>
+              <button name="cancel-edit-book" type="button" class="btn btn-danger" (click)="cancelEdit()">
+                Cancel edit</button>
+            </div>
+
+          </div>
+
+
+      </form>
+      <form [formGroup]="exportForm" (submit)="exportReview()" style="margin: 10px;" *ngIf="editing">
+        <label for="txt-review">TXT</label>
+        <input style="margin: 5px;" id="txt-review" type="radio" value="txt" name="fileType" [formControlName]="'fileType'">
+        <label for="xml-review">XML</label>
+        <input style="margin: 5px;" id="xml-review" type="radio" value="xml" name="fileType" [formControlName]="'fileType'">
+        <button type="submit" class="btn btn-success" [disabled]="!exportForm.valid">Export review </button>
+      </form>
+    </div>
+    <div class="col">
+      <h2>All Reviews</h2>
+
+      <table class="table table-striped">
+        <thead>
+        <tr>
+          <th style="width:5%;"> User ID </th>
+          <th style="width:5%;"> Book ID </th>
+          <th style="width:70%"> Body </th>
+          <th style="width:20%;">  </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let review of dataSource">
+          <td><span > {{review.userId}} </span></td>
+          <td><span > {{review.bookId}} </span></td>
+          <td style="word-break: break-all;"><span > {{review.body}} </span></td>
+          <td>
+            <ul style="list-style-type:none">
+              <li style="padding-bottom:10px;">
+                  <button name="view-edit-review" type="button" class="btn btn-success" (click)="viewReview(review.id)">
+                    <i class="fa fa-pencil-square-o"></i> View/Edit
+                  </button>
+              </li>
+              <li>
+                <form >
+                  <button name="delete-review" type="button" class="btn btn-success"
+                          (click)="deleteReview(review.id)">
+                    <i class="fa fa-trash"></i> Delete
+                  </button>
+                </form>
+              </li>
+            </ul>
+          </td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Book Requests -->
+
+<div class="container" *ngIf="option == 4">
+  <div class="row">
+    <div class="col">
+
+      <h1>Add book request</h1>
+
+
+      <form [formGroup]="requestForm" (submit)="addBookRequest()">
+        <label for="book-title" class="control-label">Book Title</label> <input [formControlName]="'bookTitle'"
+                                                                      id="book-title" class="form-control" />
+        <br>
+        <label for="request-isbn13" class="control-label">ISBN-13</label>
+        <input [formControlName]="'isbn13'" id="request-isbn13" class="form-control" maxlength="13"
+               pattern="\d{13}"/>
+        <span style="color: red;" *ngIf="!requestForm.get('isbn13').valid && requestForm.get('isbn13').touched">
+                                    Please provide a valid ISBN-13 number
+          </span><br>
+        <label for="request-user-id" class="control-label">User ID</label>
+        <input [formControlName]="'userId'" id="request-user-id" class="form-control" type="number"/>
+        <span style="color: red;" *ngIf="!requestForm.get('userId').valid && requestForm.get('userId').touched">
+                                    User ID cannot be blank
+          </span><br>
+        <br>
+        <div class="row">
+          <div *ngIf="!editing">
+
+            <div class="form-group" style="padding-right:20px;padding-left:15px;">
+              <button name="add-request" type="submit" class="btn btn-success">Submit</button>
+            </div>
+          </div>
+
+          <div *ngIf="editing">
+
+            <div class="form-group" style="padding-right:20px;padding-left:15px;">
+              <button name="edit-request" type="submit" class="btn btn-success">Edit</button>
+              <button name="cancel-edit-request" type="button" class="btn btn-danger" (click)="cancelEdit()">
+                Cancel edit</button>
+            </div>
+
+          </div>
+
+        </div>
+      </form>
+      <form [formGroup]="exportForm" (submit)="exportRequest()" style="margin: 10px;" *ngIf="editing">
+        <label for="txt-request">TXT</label>
+        <input style="margin: 5px;" id="txt-request" type="radio" value="txt" name="fileType" [formControlName]="'fileType'">
+        <label for="xml-request">XML</label>
+        <input style="margin: 5px;" id="xml-request" type="radio" value="xml" name="fileType" [formControlName]="'fileType'">
+        <button type="submit" class="btn btn-success" [disabled]="!exportForm.valid">Export request </button>
+      </form>
+    </div>
+    <div class="col">
+      <mat-button-toggle-group #group = "matButtonToggleGroup" value="all">
+        <mat-button-toggle value = "all"> All requests
+        </mat-button-toggle>
+        <mat-button-toggle value = "count"> Count
+        </mat-button-toggle>
+      </mat-button-toggle-group>
+      <div *ngIf="group.value == 'all'">
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th style="width:10%;"> User ID </th>
+            <th style="width:50%;"> ISBN-13 </th>
+            <th style="width:40%;">  </th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let request of dataSource">
+            <td><span > {{request.userId}} </span></td>
+            <td><span > {{request.isbn13}} </span></td>
+            <td>
+              <ul style="list-style-type:none">
+                <li style="padding-bottom:10px;">
+                  <button name="view-edit-request" type="button" class="btn btn-success" (click)="viewRequest(request.id)">
+                    <i class="fa fa-pencil-square-o"></i> View/Edit
+                  </button>
+                </li>
+                <li>
+                  <form >
+                    <button name="delete-request" id="requestId" type="button" class="btn btn-success" (click)="deleteRequest(request.id)">
+                      <i class="fa fa-trash"></i> Delete
+                    </button>
+                  </form>
+                </li>
+              </ul>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <div *ngIf="group.value == 'count'">
+        <table class="table table-striped">
+          <thead>
+          <tr>
+            <th style="width:50%;"> ISBN-13 </th>
+            <th style="width:10%;"> Count </th>
+            <th style="width:40%;">  </th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let request of countedBookRequests">
+            <td><span > {{request.isbn13}} </span></td>
+            <td><span > {{request.nrOfRequests}} </span></td>
+            <td>
+              <ul style="list-style-type:none">
+                  <form >
+                    <button name="delete-requests-by-isbn" type="button" class="btn btn-success" (click)="deleteBookRequestsByIsbn13(request.isbn13)">
+                      <i class="fa fa-trash"></i> Delete
+                    </button>
+                  </form>
+              </ul>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+

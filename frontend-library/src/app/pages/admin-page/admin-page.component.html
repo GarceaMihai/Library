@@ -1,0 +1,44 @@
+<div class="container">
+  <div class="row justify-content-md-center">
+    <div class="col-md-auto">
+      <br>
+      <h1>ADMIN PAGE</h1>
+      <br><br>
+      <p>Active users: {{nrOfActiveUsers}}</p>
+      <br><br>
+    </div>
+  </div>
+  <div class="row justify-content-md-center">
+    <div class="col-md-auto">
+        <button name="books" id="books" type="button" class="btn btn-success" (click)="chooseBooks()">
+          <i class="fa fa-book"></i> Books </button>
+    </div>
+    <div class="col-md-auto">
+        <button name="users" id="users" type="button" class="btn btn-success" (click)="chooseUsers()">
+          <i class="fa fa-user"></i> Users </button>
+    </div>
+    <div class="col-md-auto">
+        <button name="users" id="rentals" type="button" class="btn btn-success" (click)="chooseRentals()">
+          <i class="fa fa-calendar"></i> Rentals </button>
+    </div>
+    <div class="col-md-auto">
+        <button name="reviews" id="reviews" type="button" class="btn btn-success" (click)="chooseReviews()">
+          <i class="fa fa-text-height" aria-hidden="true"></i> Reviews </button>
+    </div>
+    <div class="col-md-auto">
+      <button name="requests" id="requests" type="button" class="btn btn-success" (click)="chooseRequests()">
+        <i class="fa fa-plus" aria-hidden="true"></i> Requests </button>
+    </div>
+    <div class="col-md-auto" *ngIf="option != null">
+      <form [formGroup]="exportForm" (submit)="exportAll()">
+        <label for="txt">TXT</label>
+        <input style="margin: 5px;" id="txt" type="radio" value="txt" name="fileType" [formControlName]="'fileType'">
+        <label for="xml">XML</label>
+        <input style="margin: 5px;" id="xml" type="radio" value="xml" name="fileType" [formControlName]="'fileType'">
+        <button type="submit" class="btn btn-success" [disabled]="!exportForm.valid">Export all </button>
+      </form>
+    </div>
+  </div>
+</div>
+<br><br>
+<app-admin-options [option]="option"></app-admin-options>
